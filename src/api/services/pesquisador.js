@@ -1,8 +1,9 @@
-
+const {getInstituicao} = require("../../library/api/endpoint")
 
 const options = {
     async find(req, res){
-        res.status(200).json({Message: 'API de consulta de pesquisadores'})
+        const response = await getInstituicao()
+        res.status(200).json({Message: response})
     }
 }
 module.exports = async function main(option, req, res){
