@@ -1,12 +1,14 @@
 require('dotenv').config()
 const { Pool } = require("pg");
 
+const user = process.env.POSTGRES_USER
+const host = process.env.POSTGRES_HOST
+const database = process.env.POSTGRES_DATABASE
+const password = process.env.POSTGRES_PASSWORD
+
 const pool = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DATABASE,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.POSTGRES_PORT,
+    
+    connectionString: `postgres://${user}:${password}@${host}/${database}?sslmode=require`,
     idleTimeoutMillis: 300
 });
 
