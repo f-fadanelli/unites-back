@@ -8,6 +8,117 @@ exports.getGrauAcademico = async () => {
     return result;
 }
 
+exports.getAreaAcademica = async () => {
+    let result
+    const client = await poolPromise  
+
+    result = await client.query('SELECT * FROM TB_AREA');
+
+    return result;
+}
+
+exports.getAreaAcademicaByNameAndDifferentSeqAre = async (filter = {}) => {
+    let result
+    const client = await poolPromise    
+
+    const {NOM_ARE, SEQ_ARE} = filter
+    const values = [NOM_ARE];
+
+    let filterQuery = ''
+
+    if(SEQ_ARE){
+        filterQuery += 'AND SEQ_ARE <> $2'
+        values.push(SEQ_ARE)
+    }
+
+    result = await client.query(`SELECT * FROM TB_AREA
+                                    WHERE NOM_ARE = $1
+                                    ${filterQuery}`, values);
+
+    return result;
+}
+
+exports.insertArea = async (params = {}) => {
+    const client = await poolPromise; 
+
+    try {
+        await client.query('BEGIN'); 
+        
+        const {NOM_ARE} = params
+
+        const insertQuery = `
+            INSERT INTO TB_AREA (NOM_ARE)
+            VALUES ($1)
+        `;
+
+        const values = [NOM_ARE];
+
+        await client.query(insertQuery, values);
+
+        await client.query('COMMIT');
+
+        return 'Ok'
+    } catch (err) {
+        await client.query('ROLLBACK'); 
+        return(err.message);
+    }
+}
+
+exports.updateArea = async (params = {}) => {
+    const client = await poolPromise; 
+
+    try {
+        await client.query('BEGIN'); 
+        
+        const {SEQ_ARE, NOM_ARE} = params
+
+        const updateQuery = `
+            UPDATE TB_AREA SET NOM_ARE = $1
+                WHERE SEQ_ARE = $2
+        `;
+
+        const values = [NOM_ARE, SEQ_ARE];
+
+        await client.query(updateQuery, values);
+
+        await client.query('COMMIT');
+
+        return 'Ok'
+    } catch (err) {
+        await client.query('ROLLBACK'); 
+        return(err.message);
+    }
+}
+
+exports.deleteArea = async (params = {}) => {
+    const client = await poolPromise; 
+
+    try {
+        await client.query('BEGIN'); 
+        
+        const {SEQ_ARE} = params
+        const values = [SEQ_ARE];
+
+        let deleteQuery = `UPDATE TB_PESQUISA SET SEQ_ARE = NULL 
+                                    WHERE SEQ_ARE = $1;`;
+
+        await client.query(deleteQuery, values);
+
+        deleteQuery = `DELETE FROM TB_AREA 
+                        WHERE SEQ_ARE = $1;`
+
+        await client.query(deleteQuery, values);
+
+        await client.query('COMMIT');
+
+        return 'Ok'
+    } catch (err) {
+        await client.query('ROLLBACK'); 
+        return(err.message);
+    }
+}
+
+
 exports.getInstituicao = async () => {
     let result
     const client = await poolPromise  
@@ -99,10 +210,20 @@ exports.deleteInstituicao = async (params = {}) => {
         await client.query('BEGIN'); 
         
         const {SEQ_INS} = params
-
-        const deleteQuery = `DELETE FROM TB_INSTITUICAO WHERE SEQ_INS = $1`;
-
         const values = [SEQ_INS];
+
+        let deleteQuery = `UPDATE TB_PESQUISA SET SEQ_INS = NULL 
+                                    WHERE SEQ_INS = $1;`;
+
+        await client.query(deleteQuery, values);
+
+        deleteQuery = `UPDATE TB_USUARIO SET SEQ_INS = NULL 
+                                    WHERE SEQ_INS = $1;`;
+
+        await client.query(deleteQuery, values);
+
+        deleteQuery = `DELETE FROM TB_INSTITUICAO 
+                            WHERE SEQ_INS = $1`;
 
         await client.query(deleteQuery, values);
 
@@ -233,10 +354,20 @@ exports.deleteUsuario = async (params = {}) => {
         await client.query('BEGIN'); 
         
         const {SEQ_USU} = params
-
-        const deleteQuery = `DELETE FROM TB_USUARIO WHERE SEQ_USU = $1`;
-
         const values = [SEQ_USU];
+
+        let deleteQuery = `DELETE FROM TB_CONEXAO_USUARIO
+                            WHERE SEQ_USU_ENVIA = $1 OR SEQ_USU_RECEBE = $1`
+
+        await client.query(deleteQuery, values);
+
+        deleteQuery = `DELETE FROM TB_PESQUISA_USUARIO
+                            WHERE SEQ_USU = $1 `
+
+        await client.query(deleteQuery, values);
+
+        deleteQuery = `DELETE FROM TB_USUARIO 
+                        WHERE SEQ_USU = $1`;
 
         await client.query(deleteQuery, values);
 
