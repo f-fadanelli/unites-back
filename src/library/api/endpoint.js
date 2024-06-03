@@ -115,6 +115,19 @@ exports.deleteInstituicao = async (params = {}) => {
     }
 }
 
+exports.getLoginUsuario = async (filter = {}) => {
+    let result
+    const client = await poolPromise    // Realizar uma consulta
+
+    const {COD_CPF_USU, COD_SENHA_USU} = filter
+    const values = [COD_CPF_USU, COD_SENHA_USU];
+
+    result = await client.query(`SELECT * FROM TB_USUARIO 
+                                WHERE COD_CPF_USU = $1
+                                AND COD_SENHA_USU = $2`, values);
+    return result;
+}
+
 exports.getUsuario = async () => {
     let result
     const client = await poolPromise    // Realizar uma consulta
@@ -126,8 +139,9 @@ exports.getUsuario = async () => {
 exports.getPesquisador = async () => {
     let result
     const client = await poolPromise    // Realizar uma consulta
-    result = await client.query(`SELECT * FROM TB_USUARIO
-                                    WHERE FLG_PES_USU = 1
+    result = await client.query(`SELECT U.*, I.NOM_INS, I.NOM_SIGLA_INS FROM TB_USUARIO U
+                                LEFT JOIN TB_INSTITUICAO I ON I.SEQ_INS = U.SEQ_INS
+                                WHERE FLG_PES_USU = 1
                                 `);
 
     return result;

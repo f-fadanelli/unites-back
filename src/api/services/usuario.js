@@ -1,4 +1,4 @@
-const {getPesquisador, getUsuario, getUsuarioByCpfAndDifferentSeqUsu, insertUsuario, updateUsuario, deleteUsuario} = require("../../library/api/endpoint")
+const {getPesquisador, getUsuario, getUsuarioByCpfAndDifferentSeqUsu, insertUsuario, updateUsuario, deleteUsuario, getLoginUsuario} = require("../../library/api/endpoint")
 
 const options = {
     async find(req, res){
@@ -17,6 +17,19 @@ const options = {
     async findPesquisadores(req, res){
         try{
             const response = await getPesquisador()
+            if (response.rows.length > 0)
+                res.status(200).json({ Message: response.rows })
+            else
+                res.status(400).json({ Message: 'No documents were found' })
+        }
+        catch(err){
+            res.status(400).json({Message: err.message})
+        }
+    },
+
+    async findLogin(req, res){
+        try{
+            const response = await getLoginUsuario(req.params)
             if (response.rows.length > 0)
                 res.status(200).json({ Message: response.rows })
             else
