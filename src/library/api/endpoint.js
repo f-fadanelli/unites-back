@@ -21,14 +21,14 @@ exports.getAreaAcademicaByNameAndDifferentSeqAre = async (filter = {}) => {
     let result
     const client = await poolPromise    
 
-    const {NOM_ARE, SEQ_ARE} = filter
-    const values = [NOM_ARE];
+    const {nom_are, seq_are} = filter
+    const values = [nom_are];
 
     let filterQuery = ''
 
-    if(SEQ_ARE){
+    if(seq_are){
         filterQuery += 'AND SEQ_ARE <> $2'
-        values.push(SEQ_ARE)
+        values.push(seq_are)
     }
 
     result = await client.query(`SELECT * FROM TB_AREA
@@ -44,14 +44,14 @@ exports.insertArea = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {NOM_ARE} = params
+        const {nom_are} = params
 
         const insertQuery = `
             INSERT INTO TB_AREA (NOM_ARE)
             VALUES ($1)
         `;
 
-        const values = [NOM_ARE];
+        const values = [nom_are];
 
         await client.query(insertQuery, values);
 
@@ -70,14 +70,14 @@ exports.updateArea = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {SEQ_ARE, NOM_ARE} = params
+        const {seq_are, nom_are} = params
 
         const updateQuery = `
             UPDATE TB_AREA SET NOM_ARE = $1
                 WHERE SEQ_ARE = $2
         `;
 
-        const values = [NOM_ARE, SEQ_ARE];
+        const values = [nom_are, seq_are];
 
         await client.query(updateQuery, values);
 
@@ -96,8 +96,8 @@ exports.deleteArea = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {SEQ_ARE} = params
-        const values = [SEQ_ARE];
+        const {seq_are} = params
+        const values = [seq_are];
 
         let deleteQuery = `UPDATE TB_PESQUISA SET SEQ_ARE = NULL 
                                     WHERE SEQ_ARE = $1;`;
@@ -132,14 +132,14 @@ exports.getInstituicaoByCnpjAndDifferentSeqIns = async (filter = {}) => {
     let result
     const client = await poolPromise    
 
-    const {COD_CNPJ_INS, SEQ_INS} = filter
-    const values = [COD_CNPJ_INS];
+    const {cod_cnpj_ins, seq_ins} = filter
+    const values = [cod_cnpj_ins];
 
     let filterQuery = ''
 
-    if(SEQ_INS){
+    if(seq_ins){
         filterQuery += 'AND SEQ_INS <> $2'
-        values.push(SEQ_INS)
+        values.push(seq_ins)
     }
 
     result = await client.query(`SELECT * FROM TB_INSTITUICAO
@@ -155,14 +155,14 @@ exports.insertInstituicao = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {COD_CNPJ_INS, NOM_INS, NOM_SIGLA_INS} = params
+        const {cod_cnpj_ins, nom_ins, nom_sigla_ins} = params
 
         const insertQuery = `
             INSERT INTO TB_INSTITUICAO (COD_CNPJ_INS, NOM_INS, NOM_SIGLA_INS)
             VALUES ($1, $2, $3)
         `;
 
-        const values = [COD_CNPJ_INS, NOM_INS, NOM_SIGLA_INS];
+        const values = [cod_cnpj_ins, nom_ins, nom_sigla_ins];
 
         await client.query(insertQuery, values);
 
@@ -181,7 +181,7 @@ exports.updateInstituicao = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {SEQ_INS, COD_CNPJ_INS, NOM_INS, NOM_SIGLA_INS} = params
+        const {seq_ins, cod_cnpj_ins, nom_ins, nom_sigla_ins} = params
 
         const updateQuery = `
             UPDATE TB_INSTITUICAO SET COD_CNPJ_INS = $1, 
@@ -190,7 +190,7 @@ exports.updateInstituicao = async (params = {}) => {
                 WHERE SEQ_INS = $4
         `;
 
-        const values = [COD_CNPJ_INS, NOM_INS, NOM_SIGLA_INS, SEQ_INS];
+        const values = [cod_cnpj_ins, nom_ins, nom_sigla_ins, seq_ins];
 
         await client.query(updateQuery, values);
 
@@ -209,8 +209,8 @@ exports.deleteInstituicao = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {SEQ_INS} = params
-        const values = [SEQ_INS];
+        const {seq_ins} = params
+        const values = [seq_ins];
 
         let deleteQuery = `UPDATE TB_PESQUISA SET SEQ_INS = NULL 
                                     WHERE SEQ_INS = $1;`;
@@ -240,8 +240,8 @@ exports.getLoginUsuario = async (filter = {}) => {
     let result
     const client = await poolPromise    // Realizar uma consulta
 
-    const {COD_CPF_USU, COD_SENHA_USU} = filter
-    const values = [COD_CPF_USU, COD_SENHA_USU];
+    const {cod_cpf_usu, cod_senha_usu} = filter
+    const values = [cod_cpf_usu, cod_senha_usu];
 
     result = await client.query(`SELECT * FROM TB_USUARIO 
                                 WHERE COD_CPF_USU = $1
@@ -260,8 +260,9 @@ exports.getUsuario = async () => {
 exports.getPesquisador = async () => {
     let result
     const client = await poolPromise    // Realizar uma consulta
-    result = await client.query(`SELECT U.*, I.NOM_INS, I.NOM_SIGLA_INS FROM TB_USUARIO U
+    result = await client.query(`SELECT U.*, I.NOM_INS, I.NOM_SIGLA_INS, G.NOM_GRA FROM TB_USUARIO U
                                 LEFT JOIN TB_INSTITUICAO I ON I.SEQ_INS = U.SEQ_INS
+                                LEFT JOIN TB_GRAU G ON G.SEQ_GRA = U.SEQ_GRA
                                 WHERE FLG_PES_USU = 1
                                 `);
 
@@ -272,14 +273,14 @@ exports.getUsuarioByCpfAndDifferentSeqUsu = async (filter = {}) => {
     let result
     const client = await poolPromise    
 
-    const {COD_CPF_USU, SEQ_USU} = filter
-    const values = [COD_CPF_USU];
+    const {cod_cpf_usu, seq_usu} = filter
+    const values = [cod_cpf_usu];
 
     let filterQuery = ''
 
-    if(SEQ_USU){
+    if(seq_usu){
         filterQuery += 'AND SEQ_USU <> $2'
-        values.push(SEQ_USU)
+        values.push(seq_usu)
     }
 
     result = await client.query(`SELECT * FROM TB_USUARIO
@@ -295,14 +296,14 @@ exports.insertUsuario = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {COD_CPF_USU, NOM_COMPLETO_USU, COD_SENHA_USU, PESQUISADOR, SEQ_GRA, SEQ_INS} = params
+        const {cod_cpf_usu, nom_completo_usu, cod_senha_usu, pesquisador, seq_gra, seq_ins} = params
 
         const insertQuery = `
             INSERT INTO TB_USUARIO (COD_CPF_USU, NOM_COMPLETO_USU, COD_SENHA_USU, FLG_PES_USU, SEQ_GRA, SEQ_INS)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
 
-        const values = [COD_CPF_USU, NOM_COMPLETO_USU, COD_SENHA_USU, PESQUISADOR?1:0, SEQ_GRA, SEQ_INS];
+        const values = [cod_cpf_usu, nom_completo_usu, cod_senha_usu, pesquisador?1:0, seq_gra, seq_ins];
 
         await client.query(insertQuery, values);
 
@@ -321,7 +322,7 @@ exports.updateUsuario = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {SEQ_USU, COD_CPF_USU, NOM_COMPLETO_USU, COD_SENHA_USU, PESQUISADOR, DES_FORMACAO_USU, SEQ_GRA, SEQ_INS} = params
+        const {seq_usu, cod_cpf_usu, nom_completo_usu, cod_senha_usu, pesquisador, des_formacao_usu, seq_gra, seq_ins} = params
 
         const updateQuery = `
             UPDATE TB_USUARIO SET COD_CPF_USU = $1,
@@ -334,7 +335,7 @@ exports.updateUsuario = async (params = {}) => {
                 WHERE SEQ_USU = $8
         `;
 
-        const values = [COD_CPF_USU, NOM_COMPLETO_USU, COD_SENHA_USU, PESQUISADOR?1:0, DES_FORMACAO_USU, SEQ_GRA, SEQ_INS, SEQ_USU];
+        const values = [cod_cpf_usu, nom_completo_usu, cod_senha_usu, pesquisador?1:0, des_formacao_usu, seq_gra, seq_ins, seq_usu];
 
         await client.query(updateQuery, values);
 
@@ -353,8 +354,8 @@ exports.deleteUsuario = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {SEQ_USU} = params
-        const values = [SEQ_USU];
+        const {seq_usu} = params
+        const values = [seq_usu];
 
         let deleteQuery = `DELETE FROM TB_CONEXAO_USUARIO
                             WHERE SEQ_USU_ENVIA = $1 OR SEQ_USU_RECEBE = $1`
