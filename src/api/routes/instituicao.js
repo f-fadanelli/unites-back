@@ -14,7 +14,7 @@ module.exports = function(app){
         await instituicao('update', req, res)
     })
 
-    app.delete('/instituicao/SEQ_INS/:SEQ_INS', async(req, res)=>{
+    app.delete('/instituicao/SEQ_INS/:seq_ins', async(req, res)=>{
         await instituicao('delete', req, res)
     })
 

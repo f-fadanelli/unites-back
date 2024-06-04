@@ -14,7 +14,7 @@ module.exports = function(app){
         await area('update', req, res)
     })
 
-    app.delete('/areaAcademica/SEQ_ARE/:SEQ_ARE', async(req, res)=>{
+    app.delete('/areaAcademica/SEQ_ARE/:seq_are', async(req, res)=>{
         await area('delete', req, res)
     })
 

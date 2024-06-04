@@ -2,7 +2,7 @@ const usuario = require('../services/usuario')
 
 module.exports = function(app){
 
-    app.get('/usuario/login/COD_CPF_USU/:COD_CPF_USU/COD_SENHA_USU/:COD_SENHA_USU', async(req, res)=>{
+    app.get('/usuario/login/COD_CPF_USU/:cod_cpf_usu/COD_SENHA_USU/:cod_senha_usu', async(req, res)=>{
         await usuario('findLogin', req, res)
     })
 
@@ -22,7 +22,7 @@ module.exports = function(app){
         await usuario('update', req, res)
     })
 
-    app.delete('/usuario/SEQ_USU/:SEQ_USU', async(req, res)=>{
+    app.delete('/usuario/SEQ_USU/:seq_usu', async(req, res)=>{
         await usuario('delete', req, res)
     })
 }
