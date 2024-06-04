@@ -1,4 +1,5 @@
 const {getPesquisador, getUsuario, getUsuarioByCpfAndDifferentSeqUsu, insertUsuario, updateUsuario, deleteUsuario, getLoginUsuario} = require("../../library/api/endpoint")
+const { validateReq } = require('../../library/utils')
 
 const options = {
     async find(req, res){
@@ -28,7 +29,16 @@ const options = {
     },
 
     async findLogin(req, res){
-        try{
+        // Validate fields
+        const validateReqs = validateReq("validateFindUsuarioLogin", req.params)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
+        try {
             const response = await getLoginUsuario(req.params)
             if (response.rows.length > 0)
                 res.status(200).json({ Message: response.rows })
@@ -41,6 +51,15 @@ const options = {
     },
 
     async insert(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateInsertUsuario", req.body)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
         try{
             let response = await getUsuarioByCpfAndDifferentSeqUsu(req.body)
 
@@ -62,6 +81,15 @@ const options = {
     },
 
     async update(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateUpdateUsuario", req.body)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
         try{
             let response = await getUsuarioByCpfAndDifferentSeqUsu(req.body)
 
@@ -83,6 +111,15 @@ const options = {
     },
 
     async delete(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateDeleteUsuario", req.params)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
         try{
             response = await deleteUsuario(req.params)
 

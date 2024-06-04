@@ -1,4 +1,5 @@
 const {getInstituicao, insertInstituicao, getInstituicaoByCnpjAndDifferentSeqIns, updateInstituicao, deleteInstituicao} = require("../../library/api/endpoint")
+const { validateReq } = require('../../library/utils')
 
 const options = {
     async find(req, res){
@@ -16,6 +17,15 @@ const options = {
     },
 
     async insert(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateInsertInstituicao", req.body)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
         try{
             let response = await getInstituicaoByCnpjAndDifferentSeqIns(req.body)
 
@@ -37,6 +47,15 @@ const options = {
     },
 
     async update(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateUpdateInstituicao", req.body)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
         try{
             let response = await getInstituicaoByCnpjAndDifferentSeqIns(req.body)
 
@@ -58,6 +77,15 @@ const options = {
     },
 
     async delete(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateDeleteInstituicao", req.params)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
         try{
             response = await deleteInstituicao(req.params)
 
