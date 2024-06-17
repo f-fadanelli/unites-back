@@ -44,6 +44,47 @@ module.exports = {
             console.log(e);
         }
     },
+    validateInsertEmpresa: function (params) {
+        try {
+            schema = Joi.object({
+                cod_cnpj_emp:Joi.string().required(),
+                nom_emp: Joi.string().required()            
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateUpdateEmpresa: function (params) {
+        try {
+            schema = Joi.object({
+                cod_cnpj_emp:Joi.string().required(),
+                nom_emp: Joi.string().required(),
+                seq_emp: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateDeleteEmpresa: function (params) {
+        try {
+            schema = Joi.object({
+                seq_emp: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
 
     validateInsertInstituicao: function (params) {
         try {
@@ -145,6 +186,176 @@ module.exports = {
         try {
             schema = Joi.object({
                 seq_usu: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateConexaoUsuario: function (params) {
+        try {
+            schema = Joi.object({
+                seq_usu_envia: Joi.number().required(),
+                seq_usu_recebe: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateInsertProjeto: function (params) {
+        try {
+            schema = Joi.object({
+                nom_pro: Joi.string().required(), 
+                des_pro: Joi.string().required(), 
+                dth_inicio_pro: Joi.date().iso().required(), 
+                dth_final_pro: Joi.date().iso().optional().allow(null), 
+                flg_status_pro: Joi.number().required(), 
+                seq_usu_responsavel: Joi.number().required(),
+                seq_emp_list: Joi.array().items(Joi.number()).required()          
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateUpdateProjeto: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pro: Joi.number().required(),
+                nom_pro: Joi.string().required(), 
+                des_pro: Joi.string().required(), 
+                dth_inicio_pro: Joi.date().iso().required(), 
+                dth_final_pro: Joi.date().iso().optional().allow(null), 
+                flg_status_pro: Joi.number().required(), 
+                seq_usu_responsavel: Joi.number().required(),
+                seq_emp_list: Joi.array().items(Joi.number()).required()          
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateDeleteProjeto: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pro: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateGetFinanciamentoBySeq_Pro: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pro: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateInsertPesquisa: function (params) {
+        try {
+            schema = Joi.object({
+                nom_pes: Joi.string().required(), 
+                des_pes: Joi.string().required(), 
+                dth_publicacao_pes: Joi.date().iso().required(), 
+                seq_are: Joi.number().required(), 
+                seq_pro: Joi.number().required(),
+                seq_ins: Joi.number().required(),
+                seq_usu_list: Joi.array().items(Joi.number()).required()          
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateUpdatePesquisa: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pes: Joi.number().required(),
+                nom_pes: Joi.string().required(), 
+                des_pes: Joi.string().required(), 
+                dth_publicacao_pes: Joi.date().iso().required(), 
+                seq_are: Joi.number().required(), 
+                seq_pro: Joi.number().required(),
+                seq_ins: Joi.number().required(),
+                seq_usu_list: Joi.array().items(Joi.number()).required()          
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateDeletePesquisa: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pes: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateFindPesquisadoresBySeq_Pes: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pes: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateFindPesquisadorBySeq_Usu: function (params) {
+        try {
+            schema = Joi.object({
+                seq_usu: Joi.number().required()
+            }).options({ abortEarly: false })
+
+            return schema.validate(params)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+
+    validateFindPesquisadorBySeq_Pro: function (params) {
+        try {
+            schema = Joi.object({
+                seq_pro: Joi.number().required()
             }).options({ abortEarly: false })
 
             return schema.validate(params)
