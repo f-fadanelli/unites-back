@@ -937,7 +937,7 @@ exports.getProjetoBySeq_Usu = async (params = {}) => {
 
     const client = await poolPromise    // Realizar uma consulta
 
-    result = await client.query(`SELECT PRO.SEQ_PRO, PRO.NOM_PRO, PRO.FLG_STATUS_PRO, U.NOM_COMPLETO_USU AS NOM_COMPLETO_USU_RESPONSAVEL
+    result = await client.query(`SELECT PRO.SEQ_PRO, PRO.NOM_PRO, PRO.FLG_STATUS_PRO, U.NOM_COMPLETO_USU AS NOM_COMPLETO_USU_RESPONSAVEL, PRO.DES_PRO, PRO.DTH_INICIO_PRO, PRO.DTH_FINAL_PRO
                                     FROM TB_PESQUISA_USUARIO PU
                                     LEFT JOIN TB_PESQUISA P ON P.SEQ_PES = PU.SEQ_PES
                                     LEFT JOIN TB_PROJETO PRO ON PRO.SEQ_PRO = P.SEQ_PRO
