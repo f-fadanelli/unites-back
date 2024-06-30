@@ -10,9 +10,9 @@ module.exports = function(app){
         await pesquisa('insert', req, res)
     })
 
-    // app.patch('/pesquisa', async(req, res)=>{
-    //     await pesquisa('update', req, res)
-    // })
+    app.patch('/pesquisa', async(req, res)=>{
+        await pesquisa('update', req, res)
+    })
 
     app.delete('/pesquisa/SEQ_PES/:seq_pes', async(req, res)=>{
         await pesquisa('delete', req, res)
