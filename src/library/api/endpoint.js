@@ -127,26 +127,6 @@ exports.getEmpresa = async () => {
     return result;
 }
 
-exports.getEmpresaByCnpjAndDifferentSeqEmp = async (filter = {}) => {
-    let result
-    const client = await poolPromise    
-
-    const {cod_cnpj_emp, seq_emp} = filter
-    const values = [cod_cnpj_emp];
-
-    let filterQuery = ''
-
-    if(seq_emp){
-        filterQuery += 'AND SEQ_EMP <> $2'
-        values.push(seq_emp)
-    }
-
-    result = await client.query(`SELECT * FROM TB_EMPRESA
-                                    WHERE COD_CNPJ_EMP = $1
-                                    ${filterQuery}`, values);
-
-    return result;
-}
 
 exports.insertEmpresa = async (params = {}) => {
     const client = await poolPromise; 
@@ -154,14 +134,14 @@ exports.insertEmpresa = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {cod_cnpj_emp, nom_emp} = params
+        const {des_emp, nom_emp} = params
 
         const insertQuery = `
-            INSERT INTO TB_EMPRESA (COD_CNPJ_EMP, NOM_EMP)
+            INSERT INTO TB_EMPRESA (DES_EMP, NOM_EMP)
             VALUES ($1, $2)
         `;
 
-        const values = [cod_cnpj_emp, nom_emp];
+        const values = [des_emp, nom_emp];
 
         await client.query(insertQuery, values);
 
@@ -180,15 +160,15 @@ exports.updateEmpresa = async (params = {}) => {
     try {
         await client.query('BEGIN'); 
         
-        const {seq_emp, cod_cnpj_emp, nom_emp} = params
+        const {seq_emp, des_emp, nom_emp} = params
 
         const updateQuery = `
-            UPDATE TB_EMPRESA SET COD_CNPJ_EMP = $1, 
+            UPDATE TB_EMPRESA SET DES_EMP = $1, 
                                         NOM_EMP = $2
                 WHERE SEQ_EMP = $3
         `;
 
-        const values = [cod_cnpj_emp, nom_emp, seq_emp];
+        const values = [des_emp, nom_emp, seq_emp];
 
         await client.query(updateQuery, values);
 
@@ -818,7 +798,8 @@ exports.getPesquisadoresBySeq_Pro = async (params = {}) => {
                                 LEFT JOIN TB_USUARIO U ON U.SEQ_USU = PU.SEQ_USU
                                 LEFT JOIN TB_PESQUISA P ON P.SEQ_PES = PU.SEQ_PES  
                                 LEFT JOIN TB_PROJETO PRO ON PRO.SEQ_PRO = P.SEQ_PRO
-                                WHERE PRO.SEQ_PRO = $1`, values);
+                                WHERE PRO.SEQ_PRO = $1
+                                GROUP BY U.SEQ_USU, U.NOM_COMPLETO_USU, PRO.SEQ_PRO, PRO.NOM_PRO`, values);
 
     return result;
 }
@@ -864,6 +845,28 @@ exports.getConexaoBySeq_Usu = async (params = {}) => {
 
 
     result = await client.query(`(SELECT U.SEQ_USU, U.NOM_COMPLETO_USU FROM TB_CONEXAO_USUARIO C
+                                                    LEFT JOIN TB_USUARIO U ON U.SEQ_USU = C.SEQ_USU_RECEBE
+                                                    WHERE C.SEQ_USU_ENVIA = $1)
+                                                UNION
+                                                (SELECT U.SEQ_USU, U.NOM_COMPLETO_USU FROM TB_CONEXAO_USUARIO C
+                                                    LEFT JOIN TB_USUARIO U ON U.SEQ_USU = C.SEQ_USU_ENVIA
+                                                    WHERE C.SEQ_USU_RECEBE = $1)`, values);
+
+    return result
+}
+
+exports.getConexaoIncluindoSeq_Usu = async (params = {}) => {
+    let result
+    
+    const {seq_usu} = params
+    const values = [seq_usu];
+
+    const client = await poolPromise    // Realizar uma consulta
+
+
+    result = await client.query(`(SELECT U.SEQ_USU, U.NOM_COMPLETO_USU FROM TB_USUARIO U WHERE U.SEQ_USU = $1)
+                                                UNION
+                                                (SELECT U.SEQ_USU, U.NOM_COMPLETO_USU FROM TB_CONEXAO_USUARIO C
                                                     LEFT JOIN TB_USUARIO U ON U.SEQ_USU = C.SEQ_USU_RECEBE
                                                     WHERE C.SEQ_USU_ENVIA = $1)
                                                 UNION

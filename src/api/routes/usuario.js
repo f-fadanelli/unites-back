@@ -49,4 +49,8 @@ module.exports = function(app){
     app.get('/usuario/conexao/SEQ_USU/:seq_usu', async(req, res)=>{
         await usuario('findConexaoBySeq_Usu', req, res)
     })
+
+    app.get('/usuario/conexao/incluindo/SEQ_USU/:seq_usu', async(req, res)=>{
+        await usuario('findConexaoIncluindoSeq_Usu', req, res)
+    })
 }

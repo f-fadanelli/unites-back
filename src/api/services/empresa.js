@@ -2,8 +2,8 @@ const { deleteEmpresa, updateEmpresa, getEmpresaByCnpjAndDifferentSeqEmp, insert
 const { validateReq } = require('../../library/utils')
 
 const options = {
-    async find(req, res){
-        try{
+    async find(req, res) {
+        try {
             const response = await getEmpresa()
 
             if (response.rows.length > 0)
@@ -11,12 +11,12 @@ const options = {
             else
                 res.status(400).json({ Message: 'No documents were found!' })
         }
-        catch(err){
-            res.status(400).json({Message: err.message})
+        catch (err) {
+            res.status(400).json({ Message: err.message })
         }
     },
 
-    async insert(req, res){
+    async insert(req, res) {
         // Validate fields
         const validateReqs = validateReq("validateInsertEmpresa", req.body)
         let validate = [validateReqs]
@@ -26,27 +26,20 @@ const options = {
             return res.status(400).json({ Error: validate })
         }
 
-        try{
-            let response = await getEmpresaByCnpjAndDifferentSeqEmp(req.body)
+        try {
+            let response = await insertEmpresa(req.body)
 
-            if(response.rows.length>0)
-                res.status(400).json({ Message: 'Company with informed CNPJ allready exists!' })
-            else{
-
-                response = await insertEmpresa(req.body)
-
-                if (response === 'Ok')
-                    res.status(200).json({ Message: 'All documents inserted!' })
-                else
-                    res.status(400).json({ Message: response })
-            }
+            if (response === 'Ok')
+                res.status(200).json({ Message: 'All documents inserted!' })
+            else
+                res.status(400).json({ Message: response })
         }
-        catch(err){
-            res.status(400).json({Message: err.message})
+        catch (err) {
+            res.status(400).json({ Message: err.message })
         }
     },
 
-    async update(req, res){
+    async update(req, res) {
         // Validate fields
         const validateReqs = validateReq("validateUpdateEmpresa", req.body)
         let validate = [validateReqs]
@@ -56,27 +49,22 @@ const options = {
             return res.status(400).json({ Error: validate })
         }
 
-        try{
-            let response = await getEmpresaByCnpjAndDifferentSeqEmp(req.body)
+        try {
 
-            if(response.rows.length>0)
-                res.status(400).json({ Message: 'Company with informed CNPJ allready exists!' })
-            else{
+            let response = await updateEmpresa(req.body)
 
-                response = await updateEmpresa(req.body)
+            if (response === 'Ok')
+                res.status(200).json({ Message: 'All documents updated!' })
+            else
+                res.status(400).json({ Message: response })
 
-                if (response === 'Ok')
-                    res.status(200).json({ Message: 'All documents updated!' })
-                else
-                    res.status(400).json({ Message: response })
-            }
         }
-        catch(err){
-            res.status(400).json({Message: err.message})
+        catch (err) {
+            res.status(400).json({ Message: err.message })
         }
     },
 
-    async delete(req, res){
+    async delete(req, res) {
         // Validate fields
         const validateReqs = validateReq("validateDeleteEmpresa", req.params)
         let validate = [validateReqs]
@@ -86,7 +74,7 @@ const options = {
             return res.status(400).json({ Error: validate })
         }
 
-        try{
+        try {
             response = await deleteEmpresa(req.params)
 
             if (response === 'Ok')
@@ -95,12 +83,12 @@ const options = {
                 res.status(400).json({ Message: response })
 
         }
-        catch(err){
-            res.status(400).json({Message: err.message})
+        catch (err) {
+            res.status(400).json({ Message: err.message })
         }
     }
 }
 
-module.exports = async function main(option, req, res){
+module.exports = async function main(option, req, res) {
     await options[option](req, res)
 }

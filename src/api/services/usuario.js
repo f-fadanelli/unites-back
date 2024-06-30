@@ -1,4 +1,4 @@
-const {getPesquisador, getUsuario, getUsuarioByCpfAndDifferentSeqUsu, insertUsuario, updateUsuario, deleteUsuario, getLoginUsuario, insertConexaoUsuario, deleteConexaoUsuario, getPesquisadoresBySeq_Pes, getPesquisadorBySeq_Usu, getConexaoBySeq_Usu, getPesquisadoresBySeq_Pro} = require("../../library/api/endpoint")
+const {getPesquisador, getUsuario, getUsuarioByCpfAndDifferentSeqUsu, insertUsuario, updateUsuario, deleteUsuario, getLoginUsuario, insertConexaoUsuario, deleteConexaoUsuario, getPesquisadoresBySeq_Pes, getPesquisadorBySeq_Usu, getConexaoBySeq_Usu, getPesquisadoresBySeq_Pro, getConexaoIncluindoSeq_Usu} = require("../../library/api/endpoint")
 const { validateReq } = require('../../library/utils')
 
 const options = {
@@ -267,6 +267,28 @@ const options = {
             res.status(400).json({Message: err.message})
         }
     },
+
+    async findConexaoIncluindoSeq_Usu(req, res){
+        // Validate fields
+        const validateReqs = validateReq("validateFindPesquisadorBySeq_Usu", req.params)
+        let validate = [validateReqs]
+            .flat()
+            .filter(item => item !== undefined)
+        if (validate.length > 0) {
+            return res.status(400).json({ Error: validate })
+        }
+
+        try{
+            const response = await getConexaoIncluindoSeq_Usu(req.params)
+            if (response.rows.length > 0)
+                res.status(200).json({ Message: response.rows })
+            else
+                res.status(400).json({ Message: 'No documents were found' })
+        }
+        catch(err){
+            res.status(400).json({Message: err.message})
+        }
+    }
 }
 module.exports = async function main(option, req, res){
     await options[option](req, res)

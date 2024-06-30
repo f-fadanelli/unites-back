@@ -47,7 +47,7 @@ module.exports = {
     validateInsertEmpresa: function (params) {
         try {
             schema = Joi.object({
-                cod_cnpj_emp:Joi.string().required(),
+                des_emp:Joi.string().required(),
                 nom_emp: Joi.string().required()            
             }).options({ abortEarly: false })
 
@@ -61,7 +61,7 @@ module.exports = {
     validateUpdateEmpresa: function (params) {
         try {
             schema = Joi.object({
-                cod_cnpj_emp:Joi.string().required(),
+                des_emp:Joi.string().required(),
                 nom_emp: Joi.string().required(),
                 seq_emp: Joi.number().required()
             }).options({ abortEarly: false })
