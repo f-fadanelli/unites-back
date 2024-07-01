@@ -24,7 +24,7 @@ describe('Conexão com bando de dados', function() {
 describe('Verificação de resposta de API', function() {
     it('A aplicação deve receber API com status 200', async function () {
         try {
-            const url = "http://localhost:3000/api/pesquisador";
+            const url = "http://localhost:3000/api/usuario/pesquisador";
             const response = await fetch(url);
             
             assert(response.status===200, 'A aplicação recebeu status 200 da API.');
