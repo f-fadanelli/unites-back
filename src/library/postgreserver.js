@@ -7,9 +7,8 @@ const database = process.env.POSTGRES_DATABASE
 const password = process.env.POSTGRES_PASSWORD
 
 const pool = new Pool({
-    
     connectionString: `postgres://${user}:${password}@${host}/${database}?sslmode=require`,
-    idleTimeoutMillis: 300
+    idleTimeoutMillis: 3000
 });
 
 const poolPromise = pool
